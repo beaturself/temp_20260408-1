@@ -1,9 +1,15 @@
-// pages/chat/index.js - AI 暖心对话（Supabase 版 + 会话管理 + 流式输出）
+// pages/chat/index.js - AI 暖心对话（会话管理 + 流式输出 + 图片解析）
 const supabase = require('../../utils/supabase')
+const zhipuAuth = require('../../utils/zhipu-auth')
 const API_URL = 'https://api.deepseek.com/chat/completions'
 const API_KEY = 'sk-cea233d8fefd49c38f9585a9108f132a'
 const MODEL = 'deepseek-chat'
 const SYSTEM_PROMPT = '你是一个温暖贴心的AI助手，名叫「暖心AI」。你的语气温柔、真诚、有力量。你善于倾听，给人鼓励和安慰。回复简洁而温暖，每次回复控制在100字以内。适当使用温暖的表达，但不要过于夸张。'
+
+// 智谱 AI 文件解析
+const ZHIPU_PARSER_URL = 'https://open.bigmodel.cn/api/paas/v4/files/parser/create'
+const ZHIPU_RESULT_URL = 'https://open.bigmodel.cn/api/paas/v4/files/parser/result'
+const ZHIPU_API_KEY = '44177b5247b14689a112c2f66589ccba.LL0GMfQVtnNWdl4L'
 
 const STORAGE_KEY = 'chat_messages'
 const CONVERSATION_KEY = 'conversation_id'
@@ -18,6 +24,8 @@ Page({
     msgId: 0,
     chatHeight: 0,
     uploading: false,
+    uploadText: '图片处理中...',
+    pendingImage: '',
     showHistory: false,
     conversationList: [],
     currentConvId: ''
@@ -196,32 +204,59 @@ Page({
   // ========== 发送消息 ==========
 
   onSend() {
-    const content = this.data.inputValue.trim()
-    if (!content || this.data.loading) return
+    const text = this.data.inputValue.trim()
+    const image = this.data.pendingImage
+    if ((!text && !image) || this.data.loading || this.data.uploading) return
 
     // 首次发消息时记录会话
     const userMessages = this.data.messages.filter(m => m.role === 'user')
     if (userMessages.length === 0) {
-      this.recordConversation(content)
+      this.recordConversation(text || '[图片识别]')
     }
 
-    const userMsg = {
-      id: this.data.msgId + 1,
-      role: 'user',
-      content,
-      msg_type: 'text',
-      image_url: ''
-    }
+    if (image) {
+      // 有图片（可能带文字）
+      const msgType = text ? 'image_text' : 'image'
+      const userMsg = {
+        id: this.data.msgId + 1,
+        role: 'user',
+        content: text || '[图片]',
+        msg_type: msgType,
+        image_url: image
+      }
+      this._userText = text
+      this.setData({
+        messages: [...this.data.messages, userMsg],
+        inputValue: '',
+        pendingImage: '',
+        msgId: userMsg.id,
+        uploading: true,
+        uploadText: '正在解析图片...'
+      })
+      this.scrollToBottom()
 
-    this.setData({
-      messages: [...this.data.messages, userMsg],
-      inputValue: '',
-      loading: true,
-      msgId: userMsg.id
-    })
-    this.scrollToBottom()
-    this.saveToSupabase(userMsg)
-    this.callAI()
+      const ext = image.split('.').pop().toUpperCase()
+      const fileType = ['PNG', 'JPG', 'JPEG', 'BMP', 'GIF', 'WEBP'].includes(ext) ? ext : 'JPG'
+      this._uploadToParser(image, fileType)
+    } else {
+      // 纯文字
+      const userMsg = {
+        id: this.data.msgId + 1,
+        role: 'user',
+        content: text,
+        msg_type: 'text',
+        image_url: ''
+      }
+      this.setData({
+        messages: [...this.data.messages, userMsg],
+        inputValue: '',
+        loading: true,
+        msgId: userMsg.id
+      })
+      this.scrollToBottom()
+      this.saveToSupabase(userMsg)
+      this.callAI()
+    }
   },
 
   onChooseImage() {
@@ -233,41 +268,132 @@ Page({
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: (res) => {
-        const tempFile = res.tempFiles[0]
-        this.setData({ uploading: true })
-
-        const app = getApp()
-        const openid = app.globalData.openid
-        if (!openid) {
-          wx.showToast({ title: '请先登录', icon: 'none' })
-          this.setData({ uploading: false })
-          return
-        }
-
-        supabase.uploadImage(openid, tempFile.tempFilePath).then(imageUrl => {
-          const imgMsg = {
-            id: this.data.msgId + 1,
-            role: 'user',
-            content: '[图片]',
-            msg_type: 'image',
-            image_url: imageUrl
-          }
-
-          const messages = [...this.data.messages, imgMsg]
-          this.setData({
-            messages,
-            msgId: imgMsg.id,
-            uploading: false
-          })
-          this.saveLocal(messages)
-          this.scrollToBottom()
-          this.saveToSupabase(imgMsg)
-        }).catch(() => {
-          this.setData({ uploading: false })
-          wx.showToast({ title: '图片上传失败', icon: 'none' })
-        })
+        this.setData({ pendingImage: res.tempFiles[0].tempFilePath })
       }
     })
+  },
+
+  onCancelImage() {
+    this.setData({ pendingImage: '' })
+  },
+
+  onPreviewPending() {
+    if (this.data.pendingImage) {
+      wx.previewImage({ current: this.data.pendingImage, urls: [this.data.pendingImage] })
+    }
+  },
+
+  // ========== 智谱图片解析 ==========
+
+  /** 上传图片到智谱文件解析 */
+  _uploadToParser(filePath, fileType) {
+    const token = zhipuAuth.generateToken(ZHIPU_API_KEY)
+    wx.uploadFile({
+      url: ZHIPU_PARSER_URL,
+      filePath: filePath,
+      name: 'file',
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
+      formData: {
+        tool_type: 'lite',
+        file_type: fileType
+      },
+      success: (res) => {
+        try {
+          const data = JSON.parse(res.data)
+          if (data.success && data.task_id) {
+            this.setData({ uploadText: '正在识别内容...' })
+            this._pollParseResult(data.task_id, 0)
+          } else {
+            console.error('智谱解析响应:', data)
+            this._onParseFail(data.message || '解析任务创建失败')
+          }
+        } catch (e) {
+          console.error('智谱响应解析异常:', res.data)
+          this._onParseFail('解析响应异常')
+        }
+      },
+      fail: (err) => {
+        console.error('智谱上传失败:', err)
+        this._onParseFail('图片上传失败，请检查网络')
+      }
+    })
+  },
+
+  /** 轮询获取解析结果 */
+  _pollParseResult(taskId, retryCount) {
+    if (retryCount > 30) {
+      this._onParseFail('解析超时，请重试')
+      return
+    }
+
+    const token = zhipuAuth.generateToken(ZHIPU_API_KEY)
+    wx.request({
+      url: `${ZHIPU_RESULT_URL}/${taskId}/text`,
+      method: 'GET',
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
+      success: (res) => {
+        const data = res.data
+        if (data.status === 'succeeded' && data.content) {
+          this.setData({ uploading: false })
+          this._sendParsedToAI(data.content, this._userText || '')
+        } else if (data.status === 'processing') {
+          setTimeout(() => this._pollParseResult(taskId, retryCount + 1), 2000)
+        } else {
+          console.error('智谱解析结果:', data)
+          this._onParseFail(data.message || '图片解析失败')
+        }
+      },
+      fail: () => {
+        this._onParseFail('查询解析结果失败')
+      }
+    })
+  },
+
+  /** 解析成功，将内容发给 AI */
+  _sendParsedToAI(parsedText, userText) {
+    let content
+    if (userText) {
+      content = `用户发送了一张图片并附言：「${userText}」\n\n图片识别内容：\n${parsedText}\n\n请综合图片内容和用户附言进行回复。`
+    } else {
+      content = `用户发送了一张图片，以下是识别出的内容：\n\n${parsedText}\n\n请根据图片内容给出温暖、有帮助的回复。`
+    }
+
+    const history = this.data.messages
+      .filter(m => m.msg_type === 'text')
+      .map(m => ({ role: m.role, content: m.content }))
+
+    // 创建 AI 占位消息
+    const aiMsg = {
+      id: this.data.msgId + 1,
+      role: 'assistant',
+      content: '',
+      msg_type: 'text',
+      image_url: ''
+    }
+    this.setData({
+      messages: [...this.data.messages, aiMsg],
+      msgId: aiMsg.id,
+      loading: true
+    })
+    this.scrollToBottom()
+
+    const reqMessages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...history,
+      { role: 'user', content }
+    ]
+
+    this._callStreamAI(reqMessages)
+  },
+
+  /** 解析失败处理 */
+  _onParseFail(msg) {
+    this.setData({ uploading: false })
+    wx.showToast({ title: msg, icon: 'none', duration: 2000 })
   },
 
   onPreviewImage(e) {

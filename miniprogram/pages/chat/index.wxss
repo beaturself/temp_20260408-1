@@ -205,6 +205,39 @@ page {
   border-top: 1rpx solid var(--border-light);
 }
 
+/* ========== 待发送图片预览 ========== */
+.pending-image-area {
+  padding: 0 8rpx 16rpx;
+}
+
+.pending-image-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.pending-image-thumb {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: var(--radius-md, 16rpx);
+  border: 2rpx solid var(--border-light);
+}
+
+.pending-image-close {
+  position: absolute;
+  top: -16rpx;
+  right: -16rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .input-wrap {
   display: flex;
   align-items: center;
@@ -287,6 +320,23 @@ page {
 
 .bubble .bubble-image {
   margin: -8rpx -12rpx;
+}
+
+/* 图文组合：图片下方带文字 */
+.bubble-text-under-img {
+  display: block;
+  margin-top: 20rpx;
+}
+
+.bubble .bubble-image + .bubble-text-under-img {
+  margin-top: 16rpx;
+}
+
+/* 图文组合气泡：让图片有圆角但不吃掉文字间距 */
+.bubble:has(.bubble-text-under-img) .bubble-image {
+  margin: -8rpx -12rpx 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* ========== 上传遮罩 ========== */
