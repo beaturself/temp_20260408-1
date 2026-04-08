@@ -1,0 +1,31 @@
+<!--components/chat-input-bar/index.wxml - 输入栏组件-->
+<view class="input-bar">
+  <!-- 待发送图片预览 -->
+  <view class="pending-image-area" wx:if="{{pendingImage}}">
+    <view class="pending-image-wrap">
+      <image class="pending-image-thumb" src="{{pendingImage}}" mode="aspectFill" bindtap="onPreviewPending" />
+      <view class="pending-image-close" bindtap="onCancelImage">
+        <text>×</text>
+      </view>
+    </view>
+  </view>
+  <view class="input-wrap">
+    <view class="img-btn" bindtap="onChooseImage">
+      <text class="img-icon">+</text>
+    </view>
+    <input
+      class="chat-input"
+      placeholder="{{pendingImage ? '添加文字描述（可选）...' : '说点什么吧...'}}"
+      placeholder-class="input-placeholder"
+      value="{{inputValue}}"
+      bindinput="onInput"
+      bindconfirm="onConfirm"
+      confirm-type="send"
+      adjust-position="{{false}}"
+      cursor-spacing="20"
+    />
+    <view class="send-btn {{(inputValue || pendingImage) ? 'send-btn-active' : ''}}" bindtap="onSend">
+      <text class="send-icon">➤</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,120 @@
+/* components/chat-input-bar/index.wxss - 输入栏样式 */
+.input-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom));
+  background: rgba(255, 248, 240, 0.95);
+  backdrop-filter: blur(30rpx);
+  border-top: 1rpx solid var(--border-light);
+}
+
+/* ========== 待发送图片预览 ========== */
+.pending-image-area {
+  padding: 0 8rpx 16rpx;
+}
+
+.pending-image-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.pending-image-thumb {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: var(--radius-md, 16rpx);
+  border: 2rpx solid var(--border-light);
+}
+
+.pending-image-close {
+  position: absolute;
+  top: -16rpx;
+  right: -16rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ========== 输入框 ========== */
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--surface-card);
+  border-radius: var(--radius-full);
+  padding: 8rpx 8rpx 8rpx 32rpx;
+  border: 1rpx solid var(--border-light);
+  box-shadow: var(--shadow-soft);
+}
+
+.chat-input {
+  flex: 1;
+  height: 72rpx;
+  font-size: 30rpx;
+  color: var(--text-primary);
+}
+
+.input-placeholder {
+  color: var(--text-light);
+  font-size: 28rpx;
+}
+
+.send-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--color-warm-peach);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.send-btn-active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warm-sunset) 100%);
+  box-shadow: 0 4rpx 16rpx rgba(255, 140, 66, 0.3);
+}
+
+.send-icon {
+  font-size: 32rpx;
+  color: var(--text-on-primary);
+}
+
+.send-btn:active {
+  transform: scale(0.92);
+}
+
+/* ========== 图片按钮 ========== */
+.img-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--surface-card-hover, #f5ebe0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.img-btn:active {
+  transform: scale(0.92);
+  background: var(--color-warm-peach);
+}
+
+.img-icon {
+  font-size: 40rpx;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1;
+}

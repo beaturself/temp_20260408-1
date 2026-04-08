@@ -157,6 +157,26 @@ page {
   color: var(--text-on-primary);
 }
 
+/* ========== 图片消息 ========== */
+.bubble-image {
+  max-width: 100%;
+  border-radius: var(--radius-md, 16rpx);
+  display: block;
+}
+
+.bubble .bubble-image {
+  margin: -8rpx -12rpx;
+}
+
+.bubble-text-under-img {
+  display: block;
+  margin-top: 20rpx;
+}
+
+.bubble .bubble-image + .bubble-text-under-img {
+  margin-top: 16rpx;
+}
+
 /* ========== 加载动画 ========== */
 .bubble-loading {
   padding: 28rpx 40rpx;
@@ -189,154 +209,6 @@ page {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-/* ========== 底部输入栏 ========== */
-.input-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10;
-  padding: var(--spacing-sm) var(--spacing-md);
-  padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom));
-  background: rgba(255, 248, 240, 0.95);
-  backdrop-filter: blur(30rpx);
-  border-top: 1rpx solid var(--border-light);
-}
-
-/* ========== 待发送图片预览 ========== */
-.pending-image-area {
-  padding: 0 8rpx 16rpx;
-}
-
-.pending-image-wrap {
-  position: relative;
-  display: inline-block;
-}
-
-.pending-image-thumb {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: var(--radius-md, 16rpx);
-  border: 2rpx solid var(--border-light);
-}
-
-.pending-image-close {
-  position: absolute;
-  top: -16rpx;
-  right: -16rpx;
-  width: 40rpx;
-  height: 40rpx;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font-size: 26rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-.input-wrap {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  background: var(--surface-card);
-  border-radius: var(--radius-full);
-  padding: 8rpx 8rpx 8rpx 32rpx;
-  border: 1rpx solid var(--border-light);
-  box-shadow: var(--shadow-soft);
-}
-
-.chat-input {
-  flex: 1;
-  height: 72rpx;
-  font-size: 30rpx;
-  color: var(--text-primary);
-}
-
-.input-placeholder {
-  color: var(--text-light);
-  font-size: 28rpx;
-}
-
-.send-btn {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 50%;
-  background: var(--color-warm-peach);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-}
-
-.send-btn-active {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warm-sunset) 100%);
-  box-shadow: 0 4rpx 16rpx rgba(255, 140, 66, 0.3);
-}
-
-.send-icon {
-  font-size: 32rpx;
-  color: var(--text-on-primary);
-}
-
-.send-btn:active {
-  transform: scale(0.92);
-}
-
-/* ========== 图片按钮 ========== */
-.img-btn {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 50%;
-  background: var(--surface-card-hover, #f5ebe0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.img-btn:active {
-  transform: scale(0.92);
-  background: var(--color-warm-peach);
-}
-
-.img-icon {
-  font-size: 40rpx;
-  color: var(--text-secondary);
-  font-weight: 300;
-  line-height: 1;
-}
-
-/* ========== 图片消息 ========== */
-.bubble-image {
-  max-width: 100%;
-  border-radius: var(--radius-md, 16rpx);
-  display: block;
-}
-
-.bubble .bubble-image {
-  margin: -8rpx -12rpx;
-}
-
-/* 图文组合：图片下方带文字 */
-.bubble-text-under-img {
-  display: block;
-  margin-top: 20rpx;
-}
-
-.bubble .bubble-image + .bubble-text-under-img {
-  margin-top: 16rpx;
-}
-
-/* 图文组合气泡：让图片有圆角但不吃掉文字间距 */
-.bubble:has(.bubble-text-under-img) .bubble-image {
-  margin: -8rpx -12rpx 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
 }
 
 /* ========== 上传遮罩 ========== */
@@ -399,139 +271,4 @@ page {
 
 .nav-action-icon-list {
   font-size: 32rpx;
-}
-
-/* ========== 历史对话面板 ========== */
-.history-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.history-mask.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.history-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 560rpx;
-  z-index: 201;
-  background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 8rpx 0 32rpx rgba(0, 0, 0, 0.1);
-}
-
-.history-panel.show {
-  transform: translateX(0);
-}
-
-.history-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24rpx 32rpx;
-  padding-top: calc(env(safe-area-inset-top, 40px) + 80rpx);
-  border-bottom: 1rpx solid var(--border-light);
-}
-
-.history-title {
-  font-size: 34rpx;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.history-new-btn {
-  font-size: 26rpx;
-  color: var(--color-primary);
-  padding: 12rpx 24rpx;
-  border-radius: var(--radius-full);
-  background: rgba(255, 140, 66, 0.1);
-}
-
-.history-new-btn:active {
-  background: rgba(255, 140, 66, 0.2);
-}
-
-.history-list {
-  flex: 1;
-  padding: var(--spacing-sm);
-}
-
-.history-item {
-  display: flex;
-  align-items: center;
-  padding: 28rpx 24rpx;
-  border-radius: var(--radius-md);
-  margin-bottom: 8rpx;
-  transition: background 0.2s;
-}
-
-.history-item:active {
-  background: rgba(255, 140, 66, 0.08);
-}
-
-.history-item-active {
-  background: rgba(255, 140, 66, 0.12);
-  border: 1rpx solid var(--border-light);
-}
-
-.history-item-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.history-item-title {
-  font-size: 28rpx;
-  color: var(--text-primary);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: block;
-}
-
-.history-item-time {
-  font-size: 22rpx;
-  color: var(--text-light);
-  margin-top: 6rpx;
-  display: block;
-}
-
-.history-item-delete {
-  width: 56rpx;
-  height: 56rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36rpx;
-  color: var(--text-light);
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.history-item-delete:active {
-  background: rgba(255, 107, 107, 0.15);
-  color: var(--color-warm-coral);
-}
-
-.history-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 120rpx 0;
-  font-size: 28rpx;
-  color: var(--text-light);
 }

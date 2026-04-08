@@ -1,0 +1,30 @@
+<!--components/chat-history/index.wxml - 对话历史面板-->
+<view class="history-mask {{show ? 'show' : ''}}" bindtap="onClose"></view>
+<view class="history-panel {{show ? 'show' : ''}}">
+  <view class="history-header">
+    <text class="history-title">对话历史</text>
+    <view class="history-new-btn" bindtap="onNewChat">
+      <text>+ 新对话</text>
+    </view>
+  </view>
+  <scroll-view class="history-list" scroll-y enhanced show-scrollbar="{{false}}">
+    <view
+      class="history-item {{item.id === currentConvId ? 'history-item-active' : ''}}"
+      wx:for="{{conversationList}}"
+      wx:key="id"
+      bindtap="onSwitch"
+      data-id="{{item.id}}"
+    >
+      <view class="history-item-content">
+        <text class="history-item-title">{{item.title}}</text>
+        <text class="history-item-time">{{item.timeText}}</text>
+      </view>
+      <view class="history-item-delete" catchtap="onDelete" data-id="{{item.id}}">
+        <text>×</text>
+      </view>
+    </view>
+    <view class="history-empty" wx:if="{{conversationList.length === 0}}">
+      <text>暂无历史对话</text>
+    </view>
+  </scroll-view>
+</view>

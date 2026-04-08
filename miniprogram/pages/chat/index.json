@@ -2,6 +2,8 @@
   "navigationBarTitleText": "AI 暖心对话",
   "backgroundColor": "#FFF8F0",
   "usingComponents": {
-    "navbar": "/components/navbar/index"
+    "navbar": "/components/navbar/index",
+    "chat-history": "/components/chat-history/index",
+    "chat-input-bar": "/components/chat-input-bar/index"
   }
 }

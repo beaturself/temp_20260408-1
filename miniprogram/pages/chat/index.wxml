@@ -10,36 +10,16 @@
   </view>
 </navbar>
 
-<!-- 历史对话侧边面板 -->
-<view class="history-mask {{showHistory ? 'show' : ''}}" bindtap="closeHistory"></view>
-<view class="history-panel {{showHistory ? 'show' : ''}}">
-  <view class="history-header">
-    <text class="history-title">对话历史</text>
-    <view class="history-new-btn" bindtap="onNewChat">
-      <text>+ 新对话</text>
-    </view>
-  </view>
-  <scroll-view class="history-list" scroll-y enhanced show-scrollbar="{{false}}">
-    <view
-      class="history-item {{item.id === currentConvId ? 'history-item-active' : ''}}"
-      wx:for="{{conversationList}}"
-      wx:key="id"
-      bindtap="onSwitchConversation"
-      data-id="{{item.id}}"
-    >
-      <view class="history-item-content">
-        <text class="history-item-title">{{item.title}}</text>
-        <text class="history-item-time">{{item.timeText}}</text>
-      </view>
-      <view class="history-item-delete" catchtap="onDeleteConversation" data-id="{{item.id}}">
-        <text>×</text>
-      </view>
-    </view>
-    <view class="history-empty" wx:if="{{conversationList.length === 0}}">
-      <text>暂无历史对话</text>
-    </view>
-  </scroll-view>
-</view>
+<!-- 历史对话面板（组件） -->
+<chat-history
+  show="{{showHistory}}"
+  conversationList="{{conversationList}}"
+  currentConvId="{{currentConvId}}"
+  bind:newchat="onNewChat"
+  bind:switch="onSwitchFromHistory"
+  bind:delete="onDeleteFromHistory"
+  bind:close="closeHistory"
+/>
 
 <view class="warm-bg">
   <!-- 装饰性光晕 -->
@@ -94,9 +74,7 @@
         wx:key="id"
         id="msg-{{item.id}}"
       >
-        <!-- AI 头像 -->
         <view class="avatar avatar-ai" wx:if="{{item.role === 'assistant'}}">☀️</view>
-        <!-- 消息气泡 -->
         <view class="bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
           <!-- 图文消息 -->
           <block wx:if="{{item.msg_type === 'image_text'}}">
@@ -104,22 +82,14 @@
             <text class="bubble-text bubble-text-under-img">{{item.content}}</text>
           </block>
           <!-- 图片消息 -->
-          <image
-            wx:elif="{{item.msg_type === 'image'}}"
-            class="bubble-image"
-            src="{{item.image_url}}"
-            mode="widthFix"
-            bindtap="onPreviewImage"
-            data-url="{{item.image_url}}"
-          />
+          <image wx:elif="{{item.msg_type === 'image'}}" class="bubble-image" src="{{item.image_url}}" mode="widthFix" bindtap="onPreviewImage" data-url="{{item.image_url}}" />
           <!-- 文字消息 -->
           <text wx:else class="bubble-text">{{item.content}}</text>
         </view>
-        <!-- 用户头像 -->
         <view class="avatar avatar-user" wx:if="{{item.role === 'user'}}">🙂</view>
       </view>
 
-      <!-- 加载中但内容为空时显示点点动画 -->
+      <!-- 加载动画 -->
       <view class="message-item message-ai" wx:if="{{loading && messages[messages.length - 1].content === ''}}" id="msg-loading">
         <view class="avatar avatar-ai">☀️</view>
         <view class="bubble bubble-ai bubble-loading">
@@ -132,44 +102,23 @@
       </view>
     </view>
 
-    <!-- 底部占位 -->
     <view class="bottom-placeholder"></view>
   </scroll-view>
 
-  <!-- 底部输入栏 -->
-  <view class="input-bar">
-    <!-- 待发送图片预览 -->
-    <view class="pending-image-area" wx:if="{{pendingImage}}">
-      <view class="pending-image-wrap">
-        <image class="pending-image-thumb" src="{{pendingImage}}" mode="aspectFill" bindtap="onPreviewPending" />
-        <view class="pending-image-close" bindtap="onCancelImage">
-          <text>×</text>
-        </view>
-      </view>
-    </view>
-    <view class="input-wrap">
-      <!-- 图片按钮 -->
-      <view class="img-btn" bindtap="onChooseImage">
-        <text class="img-icon">+</text>
-      </view>
-      <input
-        class="chat-input"
-        placeholder="{{pendingImage ? '添加文字描述（可选）...' : '说点什么吧...'}}"
-        placeholder-class="input-placeholder"
-        value="{{inputValue}}"
-        bindinput="onInput"
-        bindconfirm="onSend"
-        confirm-type="send"
-        adjust-position="{{false}}"
-        cursor-spacing="20"
-      />
-      <view class="send-btn {{(inputValue || pendingImage) ? 'send-btn-active' : ''}}" bindtap="onSend">
-        <text class="send-icon">➤</text>
-      </view>
-    </view>
-  </view>
+  <!-- 输入栏（组件） -->
+  <chat-input-bar
+    inputValue="{{inputValue}}"
+    pendingImage="{{pendingImage}}"
+    loading="{{loading}}"
+    uploading="{{uploading}}"
+    bind:input="onInputFromBar"
+    bind:send="onSend"
+    bind:chooseimage="onChooseImage"
+    bind:cancelimage="onCancelImage"
+    bind:previewpending="onPreviewPending"
+  />
 
-  <!-- 上传中遮罩 -->
+  <!-- 上传/解析遮罩 -->
   <view class="upload-mask" wx:if="{{uploading}}">
     <view class="upload-loading">
       <view class="loading-dots">
