@@ -4,7 +4,8 @@ App({
     this.globalData = {
       env: "cloud1-3gw1htsn80a1e354",
       userInfo: null,
-      openid: null
+      openid: null,
+      premiumInfo: null
     };
 
     // 恢复登录状态
@@ -17,6 +18,12 @@ App({
     const openid = wx.getStorageSync('openid')
     if (openid) {
       this.globalData.openid = openid
+    }
+
+    // 恢复会员状态
+    const premiumInfo = wx.getStorageSync('premiumInfo')
+    if (premiumInfo) {
+      this.globalData.premiumInfo = premiumInfo
     }
 
     if (!wx.cloud) {

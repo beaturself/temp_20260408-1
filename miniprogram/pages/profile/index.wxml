@@ -42,11 +42,12 @@
           <text class="vip-entry-icon">👑</text>
           <view class="vip-entry-info">
             <text class="vip-entry-title">暖心AI会员</text>
-            <text class="vip-entry-desc">解锁无限畅聊 · 专属权益</text>
+            <text class="vip-entry-desc" wx:if="{{vipStatus}}">{{vipStatus}}</text>
+            <text class="vip-entry-desc" wx:else>解锁无限畅聊 · 专属权益</text>
           </view>
         </view>
         <view class="vip-entry-btn">
-          <text>立即开通</text>
+          <text>{{vipStatus ? '续费/充值' : '立即开通'}}</text>
         </view>
       </view>
     </view>

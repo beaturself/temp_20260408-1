@@ -82,9 +82,22 @@
       </view>
     </view>
 
+    <!-- 支付方式选择 -->
+    <view class="section-label">支付方式</view>
+    <view class="pay-methods">
+      <view class="pay-method {{payMethod === 'wechat' ? 'pay-method-active' : ''}}" bindtap="onSelectPayMethod" data-method="wechat">
+        <text class="pay-method-icon">💚</text>
+        <text class="pay-method-name">微信支付</text>
+      </view>
+      <view class="pay-method {{payMethod === 'alipay' ? 'pay-method-active' : ''}}" bindtap="onSelectPayMethod" data-method="alipay">
+        <text class="pay-method-icon">💙</text>
+        <text class="pay-method-name">支付宝</text>
+      </view>
+    </view>
+
     <!-- 底部支付按钮 -->
     <view class="pay-section">
-      <button class="warm-btn pay-btn" bindtap="onPay">立即开通</button>
+      <button class="warm-btn pay-btn" bindtap="onPay">¥{{currentPrice}} 立即{{activeTab === 'vip' ? '开通' : '充值'}}</button>
       <view class="pay-hint">开通即表示同意《会员服务协议》</view>
     </view>
 

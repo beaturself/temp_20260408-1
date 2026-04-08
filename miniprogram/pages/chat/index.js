@@ -299,14 +299,25 @@ Page({
     })
     this.scrollToBottom()
 
+    const reqMessages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...history
+    ]
+
+    // 尝试流式请求，失败则降级为普通请求
+    this._callStreamAI(reqMessages)
+  },
+
+  /** 流式请求 */
+  _callStreamAI(reqMessages) {
     let fullContent = ''
     this._sseBuffer = ''
+    let streamFailed = false
 
     const reqTask = wx.request({
       url: API_URL,
       method: 'POST',
       enableChunked: true,
-      responseType: 'text',
       header: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${API_KEY}`
@@ -314,23 +325,19 @@ Page({
       data: {
         model: MODEL,
         stream: true,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...history
-        ]
+        messages: reqMessages
       },
       success: () => {},
       fail: () => {
-        if (!fullContent) {
-          this.handleError('网络不太给力，再试一次吧')
-          // 移除空的 AI 占位消息
-          const msgs = this.data.messages.slice(0, -1)
-          this.setData({ messages: msgs, msgId: this.data.msgId - 1 })
-        }
+        streamFailed = true
+        clearInterval(this._streamTimer)
+        console.warn('流式请求失败，降级为普通请求')
+        this._callNormalAI(reqMessages)
       }
     })
 
     reqTask.onChunkReceived((res) => {
+      if (streamFailed) return
       const chunk = this.arrayBufferToString(res.data)
       fullContent = this.parseSSEChunk(chunk, fullContent)
       this.updateLastMessage(fullContent)
@@ -338,19 +345,20 @@ Page({
     })
 
     reqTask.onHeadersReceived((res) => {
+      if (streamFailed) return
       const status = res.statusCode
       if (status && status !== 200) {
-        this.handleError('AI 服务暂时不可用')
+        streamFailed = true
+        clearInterval(this._streamTimer)
+        this._callNormalAI(reqMessages)
       }
     })
 
-    // 流式完成检测：通过定时器检测是否结束
     this._streamTimer = setInterval(() => {
-      if (!this.data.loading) {
+      if (streamFailed || !this.data.loading) {
         clearInterval(this._streamTimer)
         return
       }
-      // 如果内容不再变化且有内容，视为完成
       if (fullContent && this._lastContent === fullContent) {
         this._stableCount = (this._stableCount || 0) + 1
         if (this._stableCount >= 3) {
@@ -362,6 +370,37 @@ Page({
       }
       this._lastContent = fullContent
     }, 500)
+  },
+
+  /** 普通请求（非流式降级方案） */
+  _callNormalAI(reqMessages) {
+    wx.request({
+      url: API_URL,
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      data: {
+        model: MODEL,
+        messages: reqMessages
+      },
+      success: (res) => {
+        if (res.statusCode === 200 && res.data && res.data.choices) {
+          const content = res.data.choices[0].message.content || ''
+          this.onStreamComplete(content)
+        } else {
+          this.handleError('AI 服务暂时不可用')
+          const msgs = this.data.messages.slice(0, -1)
+          this.setData({ messages: msgs, msgId: this.data.msgId - 1 })
+        }
+      },
+      fail: () => {
+        this.handleError('网络不太给力，再试一次吧')
+        const msgs = this.data.messages.slice(0, -1)
+        this.setData({ messages: msgs, msgId: this.data.msgId - 1 })
+      }
+    })
   },
 
   /** 解析 SSE chunk */
@@ -433,11 +472,15 @@ Page({
   /** ArrayBuffer 转字符串 */
   arrayBufferToString(buffer) {
     const uint8 = new Uint8Array(buffer)
+    if (typeof TextDecoder !== 'undefined') {
+      return new TextDecoder('utf-8').decode(uint8)
+    }
+    // 兼容不支持 TextDecoder 的环境
     let str = ''
-    // 处理 UTF-8 多字节字符
-    const decoder = new TextDecoder('utf-8')
-    str = decoder.decode(uint8)
-    return str
+    for (let i = 0; i < uint8.length; i++) {
+      str += String.fromCharCode(uint8[i])
+    }
+    try { return decodeURIComponent(escape(str)) } catch (e) { return str }
   },
 
   // ========== 存储 ==========

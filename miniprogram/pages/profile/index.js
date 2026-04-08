@@ -8,7 +8,8 @@ const LOGIN_TYPE_MAP = {
 Page({
   data: {
     userInfo: null,
-    loginTypeText: ''
+    loginTypeText: '',
+    vipStatus: ''
   },
 
   onShow() {
@@ -16,8 +17,27 @@ Page({
     const userInfo = app.globalData.userInfo
     this.setData({
       userInfo,
-      loginTypeText: userInfo ? (LOGIN_TYPE_MAP[userInfo.loginType] || '已登录') : ''
+      loginTypeText: userInfo ? (LOGIN_TYPE_MAP[userInfo.loginType] || '已登录') : '',
+      vipStatus: this.getVipStatus()
     })
+  },
+
+  getVipStatus() {
+    const info = getApp().globalData.premiumInfo
+    if (!info) return ''
+    if (info.type === 'vip') {
+      if (info.expiry > Date.now()) {
+        const d = new Date(info.expiry)
+        const month = d.getMonth() + 1
+        const day = d.getDate()
+        return `已开通 · ${month}/${day}到期`
+      }
+      return ''
+    }
+    if (info.type === 'pack' && info.chatQuota > 0) {
+      return `剩余${info.chatQuota}次对话`
+    }
+    return ''
   },
 
   onUserCardTap() {
