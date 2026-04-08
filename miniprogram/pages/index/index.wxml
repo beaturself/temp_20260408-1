@@ -1,0 +1,69 @@
+<!--index.wxml-->
+<!-- 暖色背景模板预览 -->
+<navbar title="温暖前行"></navbar>
+<view class="warm-bg">
+  <!-- 装饰性光晕 -->
+  <view class="warm-bg-glow-top"></view>
+  <view class="warm-bg-glow-left"></view>
+  <view class="warm-bg-glow-bottom"></view>
+
+  <!-- 装饰性曲线 -->
+  <view class="warm-curve-top"></view>
+  <view class="warm-curve-mid"></view>
+  <view class="warm-curve-bottom"></view>
+
+  <!-- 装饰性小圆点 -->
+  <view class="warm-dot warm-dot-1"></view>
+  <view class="warm-dot warm-dot-2"></view>
+  <view class="warm-dot warm-dot-3"></view>
+  <view class="warm-dot warm-dot-4"></view>
+
+  <!-- 页面内容 -->
+  <view class="page-content">
+    <!-- 头部问候 -->
+    <view class="header-section">
+      <view class="greeting">{{greeting}}，</view>
+      <view class="slogan">每一步都算数</view>
+      <view class="sub-slogan">愿温暖与力量，始终与你同行</view>
+    </view>
+
+    <!-- 励志卡片 -->
+    <view class="warm-card quote-card">
+      <view class="quote-icon">"</view>
+      <view class="quote-text">{{currentQuote}}</view>
+      <view class="quote-author">—— {{currentAuthor}}</view>
+    </view>
+
+    <!-- 功能入口 -->
+    <view class="section-title">温暖功能</view>
+    <view class="feature-grid">
+      <view class="feature-item" wx:for="{{features}}" wx:key="id" bindtap="onFeatureTap" data-id="{{item.id}}">
+        <view class="feature-icon-wrap" style="background: {{item.bgColor}}">
+          <text class="feature-emoji">{{item.icon}}</text>
+        </view>
+        <text class="feature-name">{{item.name}}</text>
+      </view>
+    </view>
+
+    <!-- 温暖卡片列表 -->
+    <view class="section-title">每日温暖</view>
+    <view class="warm-card moment-card" wx:for="{{moments}}" wx:key="id">
+      <view class="moment-header">
+        <view class="moment-tag-wrap">
+          <text class="warm-tag">{{item.tag}}</text>
+        </view>
+        <text class="moment-time">{{item.time}}</text>
+      </view>
+      <view class="moment-title">{{item.title}}</view>
+      <view class="moment-desc">{{item.desc}}</view>
+    </view>
+
+    <!-- 底部按钮 -->
+    <view class="bottom-action">
+      <button class="warm-btn">开始今天的温暖旅程</button>
+    </view>
+
+    <!-- 底部装饰文字 -->
+    <view class="footer-text">用温暖点亮每一天</view>
+  </view>
+</view>

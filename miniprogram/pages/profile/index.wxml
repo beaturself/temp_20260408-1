@@ -1,0 +1,84 @@
+<!--pages/profile/index.wxml - 个人中心-->
+<navbar title="个人中心"></navbar>
+<view class="warm-bg">
+  <!-- 装饰性光晕 -->
+  <view class="warm-bg-glow-top"></view>
+  <view class="warm-bg-glow-left"></view>
+  <view class="warm-bg-glow-bottom"></view>
+
+  <!-- 装饰性曲线 -->
+  <view class="warm-curve-top"></view>
+  <view class="warm-curve-mid"></view>
+
+  <!-- 页面内容 -->
+  <scroll-view class="page-content" scroll-y enhanced show-scrollbar="{{false}}">
+
+    <!-- 用户信息卡片 -->
+    <view class="user-card warm-card" bindtap="onUserCardTap">
+      <view class="user-avatar-wrap">
+        <image
+          wx:if="{{userInfo && userInfo.avatarUrl}}"
+          class="user-avatar"
+          src="{{userInfo.avatarUrl}}"
+          mode="aspectFill"
+        />
+        <view wx:else class="user-avatar-default">🙂</view>
+      </view>
+      <view class="user-info">
+        <view class="user-name">{{userInfo ? userInfo.nickName : '点击登录'}}</view>
+        <view class="user-login-type" wx:if="{{userInfo}}">
+          <text class="warm-tag">{{loginTypeText}}</text>
+        </view>
+        <view class="user-login-hint" wx:else>登录后体验完整功能</view>
+      </view>
+      <view class="user-arrow">›</view>
+    </view>
+
+    <!-- 会员入口卡片 -->
+    <view class="vip-entry" bindtap="onPremiumTap">
+      <view class="vip-entry-bg"></view>
+      <view class="vip-entry-content">
+        <view class="vip-entry-left">
+          <text class="vip-entry-icon">👑</text>
+          <view class="vip-entry-info">
+            <text class="vip-entry-title">暖心AI会员</text>
+            <text class="vip-entry-desc">解锁无限畅聊 · 专属权益</text>
+          </view>
+        </view>
+        <view class="vip-entry-btn">
+          <text>立即开通</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 功能列表 -->
+    <view class="section-title">设置</view>
+    <view class="menu-group warm-card">
+      <view class="menu-item" bindtap="onClearChat">
+        <text class="menu-icon">💬</text>
+        <text class="menu-text">清除聊天记录</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-divider"></view>
+      <view class="menu-item" bindtap="onClearCache">
+        <text class="menu-icon">🗂</text>
+        <text class="menu-text">清除缓存</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-divider"></view>
+      <view class="menu-item" bindtap="onAbout">
+        <text class="menu-icon">💡</text>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 退出登录 -->
+    <view class="logout-section" wx:if="{{userInfo}}">
+      <button class="logout-btn" bindtap="onLogout">退出登录</button>
+    </view>
+
+    <!-- 底部留白 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

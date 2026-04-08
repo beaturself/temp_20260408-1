@@ -1,0 +1,123 @@
+<!--pages/login/index.wxml - 用户登录-->
+<navbar title="登录"></navbar>
+<view class="warm-bg">
+  <!-- 装饰性光晕 -->
+  <view class="warm-bg-glow-top"></view>
+  <view class="warm-bg-glow-left"></view>
+  <view class="warm-bg-glow-bottom"></view>
+
+  <!-- 装饰性曲线 -->
+  <view class="warm-curve-top"></view>
+  <view class="warm-curve-mid"></view>
+
+  <!-- 装饰性小圆点 -->
+  <view class="warm-dot warm-dot-1"></view>
+  <view class="warm-dot warm-dot-2"></view>
+  <view class="warm-dot warm-dot-3"></view>
+
+  <view class="page-content">
+    <!-- Logo 区域 -->
+    <view class="logo-section">
+      <view class="logo-icon">☀️</view>
+      <view class="logo-title">温暖前行</view>
+      <view class="logo-desc">欢迎回来，温暖从这里开始</view>
+    </view>
+
+    <!-- 微信登录 -->
+    <view class="wx-login-section">
+      <button class="wx-login-btn" bindtap="onWechatLogin">
+        <text class="wx-login-icon">💚</text>
+        <text class="wx-login-text">微信一键登录</text>
+      </button>
+    </view>
+
+    <!-- 分隔线 -->
+    <view class="divider-section">
+      <view class="divider-line"></view>
+      <text class="divider-text">或使用其他方式登录</text>
+      <view class="divider-line"></view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'phone' ? 'tab-active' : ''}}" bindtap="onTabSwitch" data-tab="phone">
+        <text>手机号</text>
+      </view>
+      <view class="tab-item {{activeTab === 'email' ? 'tab-active' : ''}}" bindtap="onTabSwitch" data-tab="email">
+        <text>邮箱</text>
+      </view>
+    </view>
+
+    <!-- 手机号登录表单 -->
+    <view class="form-section" wx:if="{{activeTab === 'phone'}}">
+      <view class="input-group">
+        <input
+          class="form-input"
+          type="number"
+          maxlength="11"
+          placeholder="请输入手机号"
+          placeholder-class="form-placeholder"
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+      <view class="input-group code-group">
+        <input
+          class="form-input code-input"
+          type="number"
+          maxlength="6"
+          placeholder="请输入验证码"
+          placeholder-class="form-placeholder"
+          value="{{phoneCode}}"
+          bindinput="onPhoneCodeInput"
+        />
+        <view class="code-btn {{phoneCountdown > 0 ? 'code-btn-disabled' : ''}}" bindtap="onSendPhoneCode">
+          <text>{{phoneCountdown > 0 ? phoneCountdown + 's' : '获取验证码'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邮箱登录表单 -->
+    <view class="form-section" wx:if="{{activeTab === 'email'}}">
+      <view class="input-group">
+        <input
+          class="form-input"
+          type="text"
+          placeholder="请输入邮箱地址"
+          placeholder-class="form-placeholder"
+          value="{{email}}"
+          bindinput="onEmailInput"
+        />
+      </view>
+      <view class="input-group code-group">
+        <input
+          class="form-input code-input"
+          type="number"
+          maxlength="6"
+          placeholder="请输入验证码"
+          placeholder-class="form-placeholder"
+          value="{{emailCode}}"
+          bindinput="onEmailCodeInput"
+        />
+        <view class="code-btn {{emailCountdown > 0 ? 'code-btn-disabled' : ''}}" bindtap="onSendEmailCode">
+          <text>{{emailCountdown > 0 ? emailCountdown + 's' : '获取验证码'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 登录按钮 -->
+    <view class="login-btn-section" wx:if="{{activeTab}}">
+      <button class="warm-btn login-btn" bindtap="onFormLogin">登  录</button>
+    </view>
+
+    <!-- 用户协议 -->
+    <view class="agreement-section">
+      <view class="agreement-check {{agreed ? 'agreed' : ''}}" bindtap="onToggleAgreement">
+        <view class="check-box">
+          <text wx:if="{{agreed}}">✓</text>
+        </view>
+        <text class="agreement-text">已阅读并同意《用户协议》和《隐私政策》</text>
+      </view>
+    </view>
+  </view>
+</view>

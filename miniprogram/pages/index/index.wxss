@@ -1,0 +1,178 @@
+/**index.wxss - 暖色背景模板预览**/
+
+page {
+  padding: 0;
+  background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+}
+
+/* 页面内容区域 */
+.page-content {
+  position: relative;
+  z-index: 1;
+  padding: 40rpx var(--spacing-md) 80rpx;
+}
+
+/* ========== 头部问候 ========== */
+.header-section {
+  padding: var(--spacing-lg) 0 var(--spacing-md);
+}
+
+.greeting {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'PingFang SC';
+}
+
+.slogan {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-top: var(--spacing-xs);
+  font-family: 'PingFang SC';
+}
+
+.sub-slogan {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-sm);
+  letter-spacing: 2rpx;
+}
+
+/* ========== 励志语录卡片 ========== */
+.quote-card {
+  margin-top: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.quote-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-warm-amber), var(--color-warm-sunset));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.quote-icon {
+  font-size: 80rpx;
+  color: var(--color-warm-peach);
+  line-height: 1;
+  margin-bottom: -10rpx;
+  font-family: Georgia, serif;
+}
+
+.quote-text {
+  font-size: 32rpx;
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-weight: 500;
+}
+
+.quote-author {
+  font-size: 26rpx;
+  color: var(--text-light);
+  margin-top: var(--spacing-sm);
+  text-align: right;
+}
+
+/* ========== 功能入口网格 ========== */
+.section-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-sm);
+  padding: 0 var(--spacing-xs);
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+}
+
+.feature-icon-wrap {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-xs);
+  box-shadow: var(--shadow-soft);
+}
+
+.feature-emoji {
+  font-size: 44rpx;
+}
+
+.feature-name {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-top: 4rpx;
+}
+
+/* ========== 每日温暖卡片 ========== */
+.moment-card {
+  margin-bottom: var(--spacing-sm);
+}
+
+.moment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.moment-tag-wrap {
+  display: flex;
+}
+
+.moment-time {
+  font-size: 24rpx;
+  color: var(--text-light);
+}
+
+.moment-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.moment-desc {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ========== 底部按钮 ========== */
+.bottom-action {
+  margin: var(--spacing-xl) 0 var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+}
+
+.bottom-action .warm-btn {
+  width: 80%;
+  text-align: center;
+}
+
+/* ========== 底部装饰文字 ========== */
+.footer-text {
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--text-light);
+  padding-bottom: var(--spacing-lg);
+  letter-spacing: 4rpx;
+}

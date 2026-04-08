@@ -1,0 +1,169 @@
+<!--pages/chat/index.wxml - AI 暖心对话-->
+<navbar title="AI 暖心对话" showBack="{{true}}">
+  <view slot="left" class="nav-actions">
+    <view class="nav-action-btn" bindtap="onNewChat">
+      <text class="nav-action-icon">+</text>
+    </view>
+    <view class="nav-action-btn" bindtap="toggleHistory">
+      <text class="nav-action-icon nav-action-icon-list">☰</text>
+    </view>
+  </view>
+</navbar>
+
+<!-- 历史对话侧边面板 -->
+<view class="history-mask {{showHistory ? 'show' : ''}}" bindtap="closeHistory"></view>
+<view class="history-panel {{showHistory ? 'show' : ''}}">
+  <view class="history-header">
+    <text class="history-title">对话历史</text>
+    <view class="history-new-btn" bindtap="onNewChat">
+      <text>+ 新对话</text>
+    </view>
+  </view>
+  <scroll-view class="history-list" scroll-y enhanced show-scrollbar="{{false}}">
+    <view
+      class="history-item {{item.id === currentConvId ? 'history-item-active' : ''}}"
+      wx:for="{{conversationList}}"
+      wx:key="id"
+      bindtap="onSwitchConversation"
+      data-id="{{item.id}}"
+    >
+      <view class="history-item-content">
+        <text class="history-item-title">{{item.title}}</text>
+        <text class="history-item-time">{{item.timeText}}</text>
+      </view>
+      <view class="history-item-delete" catchtap="onDeleteConversation" data-id="{{item.id}}">
+        <text>×</text>
+      </view>
+    </view>
+    <view class="history-empty" wx:if="{{conversationList.length === 0}}">
+      <text>暂无历史对话</text>
+    </view>
+  </scroll-view>
+</view>
+
+<view class="warm-bg">
+  <!-- 装饰性光晕 -->
+  <view class="warm-bg-glow-top"></view>
+  <view class="warm-bg-glow-left"></view>
+  <view class="warm-bg-glow-bottom"></view>
+
+  <!-- 装饰性曲线 -->
+  <view class="warm-curve-top"></view>
+  <view class="warm-curve-mid"></view>
+  <view class="warm-curve-bottom"></view>
+
+  <!-- 装饰性小圆点 -->
+  <view class="warm-dot warm-dot-1"></view>
+  <view class="warm-dot warm-dot-2"></view>
+  <view class="warm-dot warm-dot-3"></view>
+  <view class="warm-dot warm-dot-4"></view>
+
+  <!-- 聊天内容区 -->
+  <scroll-view
+    class="chat-area"
+    scroll-y
+    scroll-into-view="{{scrollToView}}"
+    scroll-with-animation
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{chatHeight}}px;"
+  >
+    <!-- 欢迎消息 -->
+    <view class="welcome-section" wx:if="{{messages.length === 0}}">
+      <view class="welcome-icon">☀️</view>
+      <view class="welcome-title">你好，我是暖心 AI</view>
+      <view class="welcome-desc">无论开心或低落，我都在这里陪你聊聊</view>
+      <view class="welcome-hints">
+        <view class="hint-item" bindtap="onHintTap" data-text="今天心情不太好，能陪我聊聊吗">
+          <text>💬 今天心情不太好</text>
+        </view>
+        <view class="hint-item" bindtap="onHintTap" data-text="给我一些鼓励的话吧">
+          <text>💪 给我一些鼓励</text>
+        </view>
+        <view class="hint-item" bindtap="onHintTap" data-text="分享一个温暖的小故事">
+          <text>📖 讲个温暖故事</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 消息列表 -->
+    <view class="message-list">
+      <view
+        class="message-item {{item.role === 'user' ? 'message-user' : 'message-ai'}}"
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{item.id}}"
+      >
+        <!-- AI 头像 -->
+        <view class="avatar avatar-ai" wx:if="{{item.role === 'assistant'}}">☀️</view>
+        <!-- 消息气泡 -->
+        <view class="bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
+          <!-- 图片消息 -->
+          <image
+            wx:if="{{item.msg_type === 'image'}}"
+            class="bubble-image"
+            src="{{item.image_url}}"
+            mode="widthFix"
+            bindtap="onPreviewImage"
+            data-url="{{item.image_url}}"
+          />
+          <!-- 文字消息 -->
+          <text wx:else class="bubble-text">{{item.content}}</text>
+        </view>
+        <!-- 用户头像 -->
+        <view class="avatar avatar-user" wx:if="{{item.role === 'user'}}">🙂</view>
+      </view>
+
+      <!-- 加载中但内容为空时显示点点动画 -->
+      <view class="message-item message-ai" wx:if="{{loading && messages[messages.length - 1].content === ''}}" id="msg-loading">
+        <view class="avatar avatar-ai">☀️</view>
+        <view class="bubble bubble-ai bubble-loading">
+          <view class="loading-dots">
+            <view class="dot dot-1"></view>
+            <view class="dot dot-2"></view>
+            <view class="dot dot-3"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部输入栏 -->
+  <view class="input-bar">
+    <view class="input-wrap">
+      <!-- 图片按钮 -->
+      <view class="img-btn" bindtap="onChooseImage">
+        <text class="img-icon">+</text>
+      </view>
+      <input
+        class="chat-input"
+        placeholder="说点什么吧..."
+        placeholder-class="input-placeholder"
+        value="{{inputValue}}"
+        bindinput="onInput"
+        bindconfirm="onSend"
+        confirm-type="send"
+        adjust-position="{{false}}"
+        cursor-spacing="20"
+      />
+      <view class="send-btn {{inputValue ? 'send-btn-active' : ''}}" bindtap="onSend">
+        <text class="send-icon">➤</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上传中遮罩 -->
+  <view class="upload-mask" wx:if="{{uploading}}">
+    <view class="upload-loading">
+      <view class="loading-dots">
+        <view class="dot dot-1"></view>
+        <view class="dot dot-2"></view>
+        <view class="dot dot-3"></view>
+      </view>
+      <text class="upload-text">图片上传中...</text>
+    </view>
+  </view>
+</view>

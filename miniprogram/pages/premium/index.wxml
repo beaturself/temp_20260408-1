@@ -1,0 +1,93 @@
+<!--pages/premium/index.wxml - 会员与充值-->
+<navbar title="会员中心" showBack="{{true}}"></navbar>
+<view class="warm-bg">
+  <!-- 装饰性光晕 -->
+  <view class="warm-bg-glow-top"></view>
+  <view class="warm-bg-glow-left"></view>
+  <view class="warm-bg-glow-bottom"></view>
+  <view class="warm-curve-top"></view>
+  <view class="warm-curve-mid"></view>
+
+  <scroll-view class="page-content" scroll-y enhanced show-scrollbar="{{false}}">
+
+    <!-- 会员卡头部 -->
+    <view class="vip-header-card">
+      <view class="vip-header-bg"></view>
+      <view class="vip-header-content">
+        <view class="vip-icon">👑</view>
+        <view class="vip-header-info">
+          <view class="vip-header-title">暖心AI会员</view>
+          <view class="vip-header-desc">解锁全部高级功能</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 权益展示 -->
+    <view class="benefits-grid">
+      <view class="benefit-item" wx:for="{{benefits}}" wx:key="text">
+        <text class="benefit-icon">{{item.icon}}</text>
+        <text class="benefit-text">{{item.text}}</text>
+      </view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'vip' ? 'tab-active' : ''}}" bindtap="onTabChange" data-tab="vip">
+        <text>会员订阅</text>
+      </view>
+      <view class="tab-item {{activeTab === 'pack' ? 'tab-active' : ''}}" bindtap="onTabChange" data-tab="pack">
+        <text>次数充值</text>
+      </view>
+    </view>
+
+    <!-- 会员订阅 -->
+    <view class="plan-section" wx:if="{{activeTab === 'vip'}}">
+      <view
+        class="plan-card {{selectedPlan === item.id ? 'plan-selected' : ''}}"
+        wx:for="{{plans}}"
+        wx:key="id"
+        bindtap="onSelectPlan"
+        data-id="{{item.id}}"
+      >
+        <view class="plan-tag" wx:if="{{item.tag}}">
+          <text>{{item.tag}}</text>
+        </view>
+        <view class="plan-name">{{item.name}}</view>
+        <view class="plan-price">
+          <text class="plan-currency">¥</text>
+          <text class="plan-amount">{{item.price}}</text>
+          <text class="plan-unit">{{item.unit}}</text>
+        </view>
+        <view class="plan-desc">{{item.desc}}</view>
+      </view>
+    </view>
+
+    <!-- 次数充值 -->
+    <view class="plan-section" wx:if="{{activeTab === 'pack'}}">
+      <view
+        class="pack-card {{selectedPack === item.id ? 'pack-selected' : ''}}"
+        wx:for="{{packs}}"
+        wx:key="id"
+        bindtap="onSelectPack"
+        data-id="{{item.id}}"
+      >
+        <view class="pack-extra" wx:if="{{item.extra}}">
+          <text>{{item.extra}}</text>
+        </view>
+        <view class="pack-count">
+          <text class="pack-num">{{item.count}}</text>
+          <text class="pack-unit">{{item.unit}}</text>
+        </view>
+        <view class="pack-price">¥{{item.price}}</view>
+      </view>
+    </view>
+
+    <!-- 底部支付按钮 -->
+    <view class="pay-section">
+      <button class="warm-btn pay-btn" bindtap="onPay">立即开通</button>
+      <view class="pay-hint">开通即表示同意《会员服务协议》</view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

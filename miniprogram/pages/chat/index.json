@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AI 暖心对话",
+  "backgroundColor": "#FFF8F0",
+  "usingComponents": {
+    "navbar": "/components/navbar/index"
+  }
+}

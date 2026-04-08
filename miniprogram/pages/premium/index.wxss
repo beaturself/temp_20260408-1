@@ -1,0 +1,260 @@
+/**pages/premium/index.wxss - 会员与充值样式**/
+
+.page-content {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  padding: 0 var(--spacing-md);
+}
+
+/* ========== 会员卡头部 ========== */
+.vip-header-card {
+  position: relative;
+  margin: var(--spacing-sm) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.vip-header-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #3D2C22 0%, #5C3D2E 50%, #8B5E3C 100%);
+}
+
+.vip-header-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.vip-icon {
+  font-size: 72rpx;
+}
+
+.vip-header-info {
+  flex: 1;
+}
+
+.vip-header-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--color-warm-gold);
+}
+
+.vip-header-desc {
+  font-size: 26rpx;
+  color: var(--color-warm-peach);
+  margin-top: 8rpx;
+}
+
+/* ========== 权益网格 ========== */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-xs);
+  margin: var(--spacing-md) 0;
+}
+
+.benefit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  background: var(--surface-card);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--border-light);
+}
+
+.benefit-icon {
+  font-size: 40rpx;
+  margin-bottom: 8rpx;
+}
+
+.benefit-text {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ========== Tab 切换 ========== */
+.tab-bar {
+  display: flex;
+  background: var(--surface-card);
+  border-radius: var(--radius-full);
+  padding: 6rpx;
+  margin: var(--spacing-md) 0;
+  border: 1rpx solid var(--border-light);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  transition: all 0.25s ease;
+}
+
+.tab-active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warm-sunset) 100%);
+  color: var(--text-on-primary);
+  font-weight: 600;
+  box-shadow: 0 4rpx 16rpx rgba(255, 140, 66, 0.3);
+}
+
+/* ========== 会员订阅卡片 ========== */
+.plan-section {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+
+.plan-card {
+  flex: 1;
+  position: relative;
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-sm);
+  text-align: center;
+  border: 2rpx solid var(--border-light);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.25s ease;
+}
+
+.plan-selected {
+  border-color: var(--color-primary);
+  background: rgba(255, 140, 66, 0.06);
+  box-shadow: 0 8rpx 32rpx rgba(255, 140, 66, 0.2);
+}
+
+.plan-tag {
+  position: absolute;
+  top: -2rpx;
+  right: -2rpx;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-warm-sunset));
+  color: #fff;
+  font-size: 20rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 0 var(--radius-lg) 0 var(--radius-md);
+}
+
+.plan-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.plan-price {
+  margin-bottom: 8rpx;
+}
+
+.plan-currency {
+  font-size: 26rpx;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.plan-amount {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.plan-unit {
+  font-size: 22rpx;
+  color: var(--text-light);
+}
+
+.plan-desc {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  margin-top: 8rpx;
+}
+
+/* ========== 次数充值卡片 ========== */
+.pack-card {
+  flex: 1;
+  position: relative;
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) var(--spacing-sm);
+  text-align: center;
+  border: 2rpx solid var(--border-light);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.25s ease;
+}
+
+.pack-selected {
+  border-color: var(--color-primary);
+  background: rgba(255, 140, 66, 0.06);
+  box-shadow: 0 8rpx 32rpx rgba(255, 140, 66, 0.2);
+}
+
+.pack-extra {
+  position: absolute;
+  top: -2rpx;
+  right: -2rpx;
+  background: linear-gradient(135deg, var(--color-warm-coral), var(--color-warm-sunset));
+  color: #fff;
+  font-size: 20rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 0 var(--radius-lg) 0 var(--radius-md);
+}
+
+.pack-count {
+  margin-bottom: var(--spacing-sm);
+}
+
+.pack-num {
+  font-size: 52rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.pack-unit {
+  font-size: 24rpx;
+  color: var(--text-light);
+  margin-left: 4rpx;
+}
+
+.pack-price {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ========== 支付区域 ========== */
+.pay-section {
+  margin: var(--spacing-xl) 0 var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pay-btn {
+  width: 85%;
+  text-align: center;
+  font-size: 32rpx;
+  padding: 28rpx 0;
+}
+
+.pay-hint {
+  margin-top: var(--spacing-sm);
+  font-size: 22rpx;
+  color: var(--text-light);
+}
+
+/* ========== 底部留白 ========== */
+.bottom-spacer {
+  height: 80rpx;
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "温暖前行",
+  "usingComponents": {
+    "cloud-tip-modal": "/components/cloudTipModal/index",
+    "navbar": "/components/navbar/index"
+  }
+}

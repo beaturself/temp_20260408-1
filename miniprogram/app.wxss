@@ -1,0 +1,251 @@
+/**app.wxss**/
+
+/* ========== 暖色调 CSS 变量 ========== */
+page {
+  /* 主色调 - 温暖橙金 */
+  --color-primary: #FF8C42;
+  --color-primary-light: #FFB07A;
+  --color-primary-dark: #E07030;
+
+  /* 辅助暖色 */
+  --color-warm-peach: #FFDAB3;
+  --color-warm-cream: #FFF5EB;
+  --color-warm-rose: #FFE0D0;
+  --color-warm-gold: #FFD700;
+  --color-warm-amber: #FFBF69;
+  --color-warm-coral: #FF6B6B;
+  --color-warm-sunset: #FF9A76;
+
+  /* 背景渐变色 */
+  --bg-gradient-start: #FFF8F0;
+  --bg-gradient-mid: #FFF0E0;
+  --bg-gradient-end: #FFE8D6;
+
+  /* 文字色 */
+  --text-primary: #3D2C22;
+  --text-secondary: #8B6F5E;
+  --text-light: #B8A090;
+  --text-on-primary: #FFFFFF;
+
+  /* 卡片与表面 */
+  --surface-card: rgba(255, 255, 255, 0.85);
+  --surface-card-hover: rgba(255, 255, 255, 0.95);
+  --surface-overlay: rgba(255, 140, 66, 0.08);
+
+  /* 边框与阴影 */
+  --border-light: rgba(255, 140, 66, 0.15);
+  --shadow-soft: 0 4rpx 20rpx rgba(255, 140, 66, 0.1);
+  --shadow-card: 0 8rpx 32rpx rgba(255, 140, 66, 0.12);
+
+  /* 间距 */
+  --spacing-xs: 12rpx;
+  --spacing-sm: 20rpx;
+  --spacing-md: 32rpx;
+  --spacing-lg: 48rpx;
+  --spacing-xl: 64rpx;
+
+  /* 圆角 */
+  --radius-sm: 12rpx;
+  --radius-md: 20rpx;
+  --radius-lg: 32rpx;
+  --radius-full: 999rpx;
+
+  /* 页面默认背景 */
+  background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ========== 全局基础样式 ========== */
+view, text, image, scroll-view, input, button {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  background: initial;
+}
+
+button:focus {
+  outline: 0;
+}
+
+button::after {
+  border: none;
+}
+
+/* ========== 暖色背景模板组件 ========== */
+
+/* 背景容器 - 带装饰性光晕 */
+.warm-bg {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* 顶部大光晕 - 柔和橙色 */
+.warm-bg-glow-top {
+  position: absolute;
+  top: -200rpx;
+  right: -100rpx;
+  width: 500rpx;
+  height: 500rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 66, 0.2) 0%, rgba(255, 140, 66, 0) 70%);
+  pointer-events: none;
+}
+
+/* 左侧光晕 - 淡金色 */
+.warm-bg-glow-left {
+  position: absolute;
+  top: 300rpx;
+  left: -150rpx;
+  width: 400rpx;
+  height: 400rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0) 70%);
+  pointer-events: none;
+}
+
+/* 底部光晕 - 淡珊瑚色 */
+.warm-bg-glow-bottom {
+  position: absolute;
+  bottom: -100rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600rpx;
+  height: 400rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0) 70%);
+  pointer-events: none;
+}
+
+/* ========== 装饰性曲线 ========== */
+
+/* 顶部弧线装饰 */
+.warm-curve-top {
+  position: absolute;
+  top: 200rpx;
+  left: -50rpx;
+  right: -50rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255, 140, 66, 0.08);
+  pointer-events: none;
+}
+
+/* 中部弧线装饰 */
+.warm-curve-mid {
+  position: absolute;
+  top: 600rpx;
+  left: 100rpx;
+  right: -200rpx;
+  height: 400rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255, 191, 105, 0.1);
+  pointer-events: none;
+}
+
+/* 底部弧线装饰 */
+.warm-curve-bottom {
+  position: absolute;
+  bottom: 150rpx;
+  left: -200rpx;
+  right: 100rpx;
+  height: 350rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255, 154, 118, 0.08);
+  pointer-events: none;
+}
+
+/* ========== 装饰性小圆点 ========== */
+.warm-dot {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.warm-dot-1 {
+  top: 160rpx;
+  right: 80rpx;
+  width: 16rpx;
+  height: 16rpx;
+  background: rgba(255, 191, 105, 0.4);
+}
+
+.warm-dot-2 {
+  top: 450rpx;
+  left: 60rpx;
+  width: 10rpx;
+  height: 10rpx;
+  background: rgba(255, 140, 66, 0.3);
+}
+
+.warm-dot-3 {
+  top: 800rpx;
+  right: 120rpx;
+  width: 12rpx;
+  height: 12rpx;
+  background: rgba(255, 215, 0, 0.3);
+}
+
+.warm-dot-4 {
+  bottom: 300rpx;
+  left: 100rpx;
+  width: 8rpx;
+  height: 8rpx;
+  background: rgba(255, 107, 107, 0.25);
+}
+
+/* ========== 通用暖色卡片 ========== */
+.warm-card {
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-sm) var(--spacing-md);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(20rpx);
+  border: 1rpx solid var(--border-light);
+}
+
+/* ========== 暖色按钮 ========== */
+.warm-btn {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-warm-sunset) 100%);
+  color: var(--text-on-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 24rpx 64rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  box-shadow: 0 8rpx 24rpx rgba(255, 140, 66, 0.3);
+}
+
+.warm-btn:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+/* ========== 暖色标签 ========== */
+.warm-tag {
+  display: inline-block;
+  background: var(--surface-overlay);
+  color: var(--color-primary);
+  font-size: 24rpx;
+  padding: 8rpx 24rpx;
+  border-radius: var(--radius-full);
+  border: 1rpx solid var(--border-light);
+}
+
+/* ========== 分割线 ========== */
+.warm-divider {
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent 0%, var(--border-light) 50%, transparent 100%);
+  margin: var(--spacing-md) 0;
+}
